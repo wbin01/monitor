@@ -199,7 +199,7 @@ if __name__ == '__main__':
     while True:
         #Gerar numeros aleatórios de 0 a 10
 
-        # Se chegar a 10, inverte oredem para decrementar
+        # Inverte ordem para decrementar ou incrementar
         if inverse:
             value -= random.randrange(0, 2)
         else:
