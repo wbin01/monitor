@@ -1,17 +1,26 @@
 #!/usr/bin/env python3
-import time
-import os
-
 
 class Monitor(object):
-    """docstring for Monitor"""
+    """Monitor em tempo real. cria um gráfico com um valor"""
+
     model = None
 
     def __init__(self,
-                 value=5, columns=10,
-                 scale_character="|", space_character="⎺",
+                 value=5,
+                 columns=10,
+                 space_character="⎺",
+                 scale_character="|",
                  scale_color="green-dark",
                  space_color="blue-dark"):
+        """
+        Inicia a classe.
+        :type value: int
+        :type columns: int
+        :type space_character: str
+        :type scale_character: str
+        :type scale_color: str
+        :type space_color: str
+        """
         # O modelo é uma lista com os valore do último gráfico que foi usado
         # normalmente se inicia com None para que o primeiro modelo seja criado por
         # essa classe. essa função retorna um modelo que pode ser repassado de volta em um loop
@@ -66,6 +75,9 @@ class Monitor(object):
         }
 
     def get_model(self):
+        """
+        Retorna uma lista como modelo de histórico para o monitor
+        """
         if self.model is None:
             m = list()
             for column in range(self.columns):
@@ -76,7 +88,13 @@ class Monitor(object):
         return self.model
 
     def get_as_list(self, value):
-
+        """
+        Retorna uma lista com as linhas que desenham o monitor.
+        Cada linha é uma string com ae ser usada em um print dentro de um loop.
+        O objetivo deste monitor em lista, é a facilidade de adicionar informações
+        antes e depois de cada linha exibida.
+        :type value: int
+        """
         # Criando uma lista de modelo
         #  * ** ***** ** *
         # [101101111101101] 
@@ -141,6 +159,15 @@ class Monitor(object):
         return model_print
 
     def get_as_color_list(self, value):
+        """
+        Mesmo que "get_as_list()", porem com cores.
+
+        Note que os caracteres de informação de cores não são exibidas no console,
+        por isso uma contagem de caracteres em uma string com cores,
+        não equivale a quantidade de caracteres exibido no console.
+
+        :type value: int
+        """
         as_list = self.get_as_list(value)
         model_print = list()
         for i in as_list:
@@ -154,6 +181,10 @@ class Monitor(object):
         return model_print
 
     def get_as_str(self, value):
+        """
+        Retorna uma string que desenha o monitor com o valor passado.
+        :type value: int
+        """
         # [---*]
         # [---*]
         # [-*-*]
@@ -177,6 +208,15 @@ class Monitor(object):
         return str_print
 
     def get_as_color_str(self, value):
+        """
+        Mesmo que "get_as_str()", porem com cores.
+
+        Note que os caracteres de informação de cores não são exibidas no console,
+        por isso uma contagem de caracteres em uma string com cores,
+        não equivale a quantidade de caracteres exibido no console.
+
+        :type value: int
+        """
         as_str = self.get_as_str(value)
         as_str = as_str.replace(
             self.scale_character, self.colors[self.scale_color] + self.scale_character + self.colors["clean"]
@@ -192,24 +232,28 @@ class Monitor(object):
 
 if __name__ == '__main__':
     import random
-    # Valor inicial do monitoramento
-    v = 0
-    # O modelo inicial do monitoramento (O modelo é uma lista de valores de um gráfico)
-    model = None
-    # Flag para inverter números aleatórios
-    inverse = False
-
+    import time
+    import os
     # Criar 2 monitores
     blue_monitor = Monitor(columns=50, scale_color="blue", space_color="blue-dark")
     blue_model = blue_monitor.get_model()
     blue_monitor.set_model(blue_model)
 
+    # Um modelo, é uma lista com as estatísticas anteriores,
+    # serve pra gerar os números antigos da coluna, como um histórico.
+
     red_monitor = Monitor(columns=50, scale_color="red", space_color="red-dark", scale_character="+")
     red_model = red_monitor.get_model()
     red_monitor.set_model(red_model)
 
+    # Neste teste, será gerado números aleatórios de 0 a 10, decrementando e incrementando
+    # para emular números de estatísticas, números que ficam alto e depois abaixam de valor
+
+    # Valor inicial do monitoramento
+    v = 0
+    # Flag para inverter números aleatórios
+    inverse = False
     while True:
-        # Gerar números aleatórios de 0 a 10
         # Inverte ordem para decrementar ou incrementar
         if inverse:
             v -= random.randrange(0, 2)
@@ -226,11 +270,14 @@ if __name__ == '__main__':
             inverse = False
             v = random.randrange(0, 5)  # Não deixa ser menor que 0
 
+        # Limpar para atualizar a tela do terminal durante o loop
         os.system("clear")
 
         # Monitor como string. Exibe em um só print
         blue = blue_monitor.get_as_color_str(v)
+        # Atualiza o modelo do monitor
         blue_model = blue_monitor.get_model()
+        # Exibe o monitor como uma só string
         print(blue)
 
         print()
