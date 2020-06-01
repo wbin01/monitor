@@ -13,7 +13,8 @@ small_monitor.set_model(small_model)
 # serve pra gerar os números antigos da coluna, como um histórico.
 
 # Criar 2° monitor
-big_monitor = monitor.Monitor(columns=50, lines=20, scale_color="red", space_color="red-dark", scale_character="+")
+big_monitor = monitor.Monitor(
+    columns=50, lines=20, scale_color="red", space_color="red-dark", scale_character="+")
 big_model = big_monitor.get_model()
 big_monitor.set_model(big_model)
 
@@ -22,7 +23,7 @@ big_monitor.set_model(big_model)
 
 # Valor inicial do monitoramento
 v = 0
-# Valor máximo do monitoramento. corresponde ao número de linhas
+# Valor máximo do monitoramento. Corresponde ao número de linhas
 lines = 20
 # Flag para inverter números aleatórios
 inverse = False
