@@ -1,18 +1,3 @@
-## monitor
-
-Monitor em tempo real com forma de gráfico.
-
-Wilden Alisson Gomes https://github.com/w-a-gomes
-
-https://github.com/w-a-gomes/monitor
-
-*Screenshot*
-
-![Image](screens/screen.png "screenshot")
-
-Ex:
-
-```python3
 import random
 import time
 import os
@@ -84,5 +69,3 @@ while True:
     print("       0    1    2    3    4    5    6    7    8    9    10")
 
     time.sleep(0.1)
-
-```
