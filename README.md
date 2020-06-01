@@ -50,15 +50,15 @@ while True:
     else:
         v += random.randrange(0, 2)
 
-    # Se chegar a 10, inverte ordem para decrementar
-    if v >= 20:
+    # Se valor chegar ao número máximo de linhas, inverte ordem para decrementar
+    if v >= lines:
         inverse = True
-        v = random.randrange(5, lines)  # Não deixa passar do máximo
+        v = random.randrange(round(v / 2), lines)  # Não deixa passar do máximo
 
     # Se chegar a 0, inverte ordem para incrementar
     elif v <= 0:
         inverse = False
-        v = random.randrange(0, lines / 2)  # Não deixa ser menor que 0
+        v = random.randrange(0, round(lines / 2))  # Não deixa ser menor que 0
 
     # Limpar para atualizar a tela do terminal durante o loop
     os.system("clear")
