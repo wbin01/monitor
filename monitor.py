@@ -3,7 +3,8 @@
 class Monitor(object):
     """Monitor em tempo real. cria um gráfico com um valor"""
 
-    model = None
+    # model = None
+    history = dict()
 
     def __init__(self,
                  value=5,
@@ -34,9 +35,6 @@ class Monitor(object):
         self.space_character = space_character
         self.scale_color = scale_color
         self.space_color = space_color
-
-        self.model = self.get_model()
-        self.set_model(self.model)
 
         self.colors = {
             "clean": "\033[0m",
@@ -76,19 +74,27 @@ class Monitor(object):
             "white-dark": "\033[0m\033[2;37m",
             "white-background": "\033[0m\033[0;37;47m",
         }
+        self._set_history()
 
-    def get_model(self):
+    def _get_history(self):
         """
         Retorna uma lista como modelo de histórico para o monitor
         """
-        if self.model is None:
+
+        if id(self) not in self.history:
             m = list()
             for column in range(self.columns):
                 m.append(0)
 
-            self.model = m
+            history = m
 
-        return self.model
+        else:
+            history = self.history[id(self)]
+
+        return history
+
+    def _set_history(self):
+        self.history[id(self)] = self._get_history()
 
     def get_as_list(self, value):
         """
@@ -102,20 +108,21 @@ class Monitor(object):
         #  * ** ***** ** *
         # [101101111101101] 
 
-        # Lista do tamanho da quantidade de colunas e valores zerados
-        if self.model is None:
-            self.model = self.get_model()
+        # Cria um modelo com o histórico da lista
+        model = self.history[id(self)]
 
         # O ultimo item da lista sempre será atualizado.
-        self.model.append(value)
+        model.append(value)
         # Devolve tamanho da lista
-        del self.model[0]
+        del model[0]
+
+        self.history[id(self)] = model
 
         # Criar um modelo de string (desenho) com informação do modelo de valores inteiro
         # [0    , 3    , 2    , 5    ]
         # [-----, ***--, **---, *****]
         model_draw = list()
-        for m in self.model:
+        for m in model:
             # quantidade de caracteres vai ser a quantidade do valor
             item = self.scale_character * m
 
@@ -229,5 +236,5 @@ class Monitor(object):
 
         return as_str
 
-    def set_model(self, new_model):
-        self.model = new_model
+    def get_id(self):
+        return self.history[id(self)]
