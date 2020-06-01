@@ -10,14 +10,18 @@ https://github.com/w-a-gomes/monitor
 
 ![Image](screens/screen.png "screenshot")
 
-Exemplo como na screenshot acima:
+Exemplo, como na screenshot acima:
 
 ```python3
-import random
 import time
 import os
 
 import monitor
+import status
+
+# Neste teste, será gerado números aleatórios, decrementando e incrementando
+# para emular números de estatísticas ou status, números que ficam com valor alto e depois abaixam
+status = status.StatusEmulator(min_value=0, max_value=20)
 
 # Criar 1° monitor
 small_monitor = monitor.Monitor(columns=50, lines=10, scale_color="blue", space_color="blue-dark")
@@ -26,41 +30,21 @@ small_monitor = monitor.Monitor(columns=50, lines=10, scale_color="blue", space_
 big_monitor = monitor.Monitor(
     columns=50, lines=20, scale_color="red", space_color="red-dark", scale_character="+")
 
-# Neste teste, será gerado números aleatórios, decrementando e incrementando
-# para emular números de estatísticas, números que ficam com valor alto e depois abaixam
-
-# Valor inicial do monitoramento
-v = 0
-# Valor máximo do monitoramento. Corresponde ao número de linhas
-lines = 20
-# Flag para inverter números aleatórios
-inverse = False
+# *Lembrete: O valor da quantidade de linha corresponde ao valor máximo do status, então
+# um valor real de status deve ser dividido para quantidade de linhas do monitor
 
 while True:
-    # Decrementa ou incrementa
-    if inverse:
-        v -= random.randrange(0, 2)
-    else:
-        v += random.randrange(0, 2)
-
-    # Se valor chegar ao número máximo de linhas, inverte ordem para decrementar
-    if v >= lines:
-        inverse = True
-        v = random.randrange(round(v / 2), lines)  # Não deixa passar do máximo
-
-    # Se chegar a 0, inverte ordem para incrementar
-    elif v <= 0:
-        inverse = False
-        v = random.randrange(0, round(lines / 2))  # Não deixa ser menor que 0
-
     # Limpar para atualizar a tela do terminal durante o loop
     os.system("clear")
+
+    # Recebe um valor de status em tempo real
+    v = status.get_value()
 
     # Aqui o primeiro monitor é exibido como uma só string.
     # O valor é dividido por 2, pois esse monitor tem metade da altura
     small_monitor_in_blue = small_monitor.get_as_color_str(round(v / 2))
     print(small_monitor_in_blue)
-    
+
     print()
 
     # Aqui o segundo monitor é chamado como uma lista e será exibido em um loop de "for".
