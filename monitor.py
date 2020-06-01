@@ -8,6 +8,7 @@ class Monitor(object):
     def __init__(self,
                  value=5,
                  columns=10,
+                 lines=10,
                  space_character="⎺",
                  scale_character="|",
                  scale_color="green-dark",
@@ -16,6 +17,7 @@ class Monitor(object):
         Inicia a classe.
         :type value: int
         :type columns: int
+        :type lines: int
         :type space_character: str
         :type scale_character: str
         :type scale_color: str
@@ -27,6 +29,7 @@ class Monitor(object):
 
         self.value = value
         self.columns = columns
+        self.lines = lines
         self.scale_character = scale_character
         self.space_character = space_character
         self.scale_color = scale_color
@@ -119,9 +122,9 @@ class Monitor(object):
             # Preencher o resto da linha onde é o "vazio", com outro caractere
             fill = ""
             # as colunas são sempre uma escala de 10 %, i.e de 10 em 10
-            if m < 10:
+            if m < self.lines:
                 # resto faltante
-                rest = 10 - m
+                rest = self.lines - m
                 fill = self.space_character * rest
 
             # Preencher
@@ -147,8 +150,8 @@ class Monitor(object):
         # Pega o caractere de cima de todos os itens, e cria uma lista
         # depois os próximos caracteres e faz outra lista ...
         model_print = list()
-        nc = 9  # de zero a 9 são 10
-        for r in range(10):  # Altura da coluna
+        nc = self.lines - 1  # numero de linhas menos 1 pq abaixo a contagem é iniciada do zero e não do um
+        for r in range(self.lines):  # Altura da coluna
             character = ""
             for i in model_draw:
                 character = character + i[nc]
