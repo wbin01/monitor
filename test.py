@@ -29,7 +29,7 @@ lines = 20
 inverse = False
 
 while True:
-    # Inverte ordem para decrementar ou incrementar
+    # Decrementa ou incrementa
     if inverse:
         v -= random.randrange(0, 2)
     else:
