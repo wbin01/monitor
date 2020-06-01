@@ -68,9 +68,9 @@ while True:
 
         # Ajustar identamento de números menor que 10 e 100
         if vertical_label_num < 10:
-            vertical_label_str = "  " + str(vertical_label_num)
+            vertical_label_str = "  " + vertical_label_str
         elif vertical_label_num < 100:
-            vertical_label_str = " " + str(vertical_label_num)
+            vertical_label_str = " " + vertical_label_str
 
         # Exibe etiqueta e a linha do monitor
         print(vertical_label_str + " % |", red_line)
