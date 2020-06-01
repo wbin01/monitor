@@ -17,15 +17,15 @@ Ex:
 import random
 import time
 import os
-
-# Criar 2 monitores
+# Criar 1° monitor
 blue_monitor = Monitor(columns=50, scale_color="blue", space_color="blue-dark")
 blue_model = blue_monitor.get_model()
 blue_monitor.set_model(blue_model)
 
-# Um modelo, é uma lista com as estatísticas anteriores,
+# *Nota: Um modelo, é uma lista com as estatísticas anteriores,
 # serve pra gerar os números antigos da coluna, como um histórico.
 
+# Criar 2° monitor
 red_monitor = Monitor(columns=50, scale_color="red", space_color="red-dark", scale_character="+")
 red_model = red_monitor.get_model()
 red_monitor.set_model(red_model)
@@ -57,17 +57,15 @@ while True:
     # Limpar para atualizar a tela do terminal durante o loop
     os.system("clear")
 
-    # Monitor como string. Exibe em um só print
+    # Aqui o primeiro monitor é exibido como uma só string.
     blue = blue_monitor.get_as_color_str(v)
-    # Atualiza o modelo do monitor
-    blue_model = blue_monitor.get_model()
-    # Exibe o monitor como uma só string
+    blue_model = blue_monitor.get_model()  # Atualiza o modelo do monitor
     print(blue)
 
     print()
 
-    # Monitor como lista. Exibe em um "for".
-    # Bom para colocar informações antes e depois das linhas.
+    # Aqui o segundo monitor é chamado como uma lista e será exibido em um loop de "for".
+    # Em lista serve para colocar informações antes e depois das linhas.
     red = red_monitor.get_as_color_list(v)
     red_model = red_monitor.get_model()
 
