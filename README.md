@@ -10,7 +10,7 @@ https://github.com/w-a-gomes/monitor
 
 ![Image](screens/screen.png "screenshot")
 
-Ex:
+Exemplo como na screenshot acima:
 
 ```python3
 import random
@@ -33,7 +33,7 @@ big_monitor = monitor.Monitor(
 big_model = big_monitor.get_model()
 big_monitor.set_model(big_model)
 
-# Neste teste, será gerado números aleatórios de 0 a 10, decrementando e incrementando
+# Neste teste, será gerado números aleatórios, decrementando e incrementando
 # para emular números de estatísticas, números que ficam alto e depois abaixam de valor
 
 # Valor inicial do monitoramento
