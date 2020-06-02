@@ -24,11 +24,11 @@ import status
 status = status.StatusEmulator(min_value=0, max_value=20)
 
 # Criar 1° monitor
-small_monitor = monitor.Monitor(columns=50, lines=10, scale_color="blue", space_color="blue-dark")
+small_monitor = monitor.Monitor(columns=50, lines=10)
 
 # Criar 2° monitor
 big_monitor = monitor.Monitor(
-    columns=50, lines=20, scale_color="red", space_color="red-dark", scale_character="+")
+    columns=50, lines=20, primary_color="red", secondary_color="red-dark", primary_character="+")
 
 # *Lembrete: O valor da quantidade de linha corresponde ao valor máximo do status, então
 # um valor real de status deve ser dividido para quantidade de linhas do monitor
@@ -42,18 +42,17 @@ while True:
 
     # Aqui o primeiro monitor é exibido como uma só string.
     # O valor é dividido por 2, pois esse monitor tem metade da altura
-    small_monitor_in_blue = small_monitor.get_as_color_str(round(v / 2))
-    print(small_monitor_in_blue)
+    print(small_monitor.get_as_color_str(round(v / 2)))
 
     print()
 
     # Aqui o segundo monitor é chamado como uma lista e será exibido em um loop de "for".
     # O monitor em lista serve para colocar informações antes e depois das linhas.
-    big_monitor_in_red = big_monitor.get_as_color_list(v)
+    big_monitor_as_list = big_monitor.get_as_color_list(v)
 
     # Números serão uma etiqueta na vertical antes do monitor
     vertical_label_num = 100
-    for red_line in big_monitor_in_red:
+    for line in big_monitor_as_list:
         vertical_label_str = str(vertical_label_num)
 
         # Ajuste no identamento de números menor que 10 e 100
@@ -63,7 +62,7 @@ while True:
             vertical_label_str = " " + vertical_label_str
 
         # Exibe etiqueta e a linha do monitor respectivamente
-        print(vertical_label_str + " % |", red_line)
+        print(vertical_label_str + " % |", line)
         vertical_label_num -= 5
 
     # Desenha as etiquetas da horizontal
