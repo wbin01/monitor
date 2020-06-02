@@ -3,7 +3,6 @@
 class Monitor(object):
     """Monitor em tempo real. cria um gráfico com um valor"""
 
-    # model = None
     history = dict()
 
     def __init__(self,
@@ -94,6 +93,7 @@ class Monitor(object):
         return history
 
     def _set_history(self):
+        """Atualiza o histórico da instância"""
         self.history[id(self)] = self._get_history()
 
     def get_as_list(self, value):
@@ -235,6 +235,3 @@ class Monitor(object):
         )
 
         return as_str
-
-    def get_id(self):
-        return self.history[id(self)]
