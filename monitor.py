@@ -10,19 +10,19 @@ class Monitor(object):
                  value=5,
                  columns=10,
                  lines=10,
-                 space_character="⎺",
-                 scale_character="|",
-                 scale_color="green-dark",
-                 space_color="blue-dark"):
+                 primary_character="|",
+                 secondary_character="⎺",
+                 primary_color="green-dark",
+                 secondary_color="blue-dark"):
         """
         Inicia a classe.
         :type value: int
         :type columns: int
         :type lines: int
-        :type space_character: str
-        :type scale_character: str
-        :type scale_color: str
-        :type space_color: str
+        :type primary_character: str
+        :type secondary_character: str
+        :type primary_color: str
+        :type secondary_color: str
         """
         # O modelo é uma lista com os valore do último gráfico que foi usado
         # normalmente se inicia com None para que o primeiro modelo seja criado por
@@ -31,10 +31,10 @@ class Monitor(object):
         self.value = value
         self.columns = columns
         self.lines = lines
-        self.scale_character = scale_character
-        self.space_character = space_character
-        self.scale_color = scale_color
-        self.space_color = space_color
+        self.primary_character = primary_character
+        self.secondary_character = secondary_character
+        self.primary_color = primary_color
+        self.secondary_color = secondary_color
 
         self.colors = {
             "clean": "\033[0m",
@@ -124,7 +124,7 @@ class Monitor(object):
         model_draw = list()
         for m in model:
             # quantidade de caracteres vai ser a quantidade do valor
-            item = self.scale_character * m
+            item = self.primary_character * m
 
             # Preencher o resto da linha onde é o "vazio", com outro caractere
             fill = ""
@@ -132,7 +132,7 @@ class Monitor(object):
             if m < self.lines:
                 # resto faltante
                 rest = self.lines - m
-                fill = self.space_character * rest
+                fill = self.secondary_character * rest
 
             # Preencher
             item = item + fill
@@ -182,9 +182,9 @@ class Monitor(object):
         model_print = list()
         for i in as_list:
             model_print.append(i.replace(
-                self.scale_character, self.colors[self.scale_color] + self.scale_character + self.colors["clean"]
+                self.primary_character, self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
                 ).replace(
-                self.space_character, self.colors[self.space_color] + self.space_character + self.colors["clean"]
+                self.secondary_character, self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"]
                 )
             )
 
@@ -229,9 +229,9 @@ class Monitor(object):
         """
         as_str = self.get_as_str(value)
         as_str = as_str.replace(
-            self.scale_character, self.colors[self.scale_color] + self.scale_character + self.colors["clean"]
+            self.primary_character, self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
         ).replace(
-            self.space_character, self.colors[self.space_color] + self.space_character + self.colors["clean"]
+            self.secondary_character, self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"]
         )
 
         return as_str
