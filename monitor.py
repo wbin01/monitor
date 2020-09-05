@@ -135,7 +135,7 @@ class Monitor(object):
                 fill = self.secondary_character * rest
 
             # Preencher
-            item = item + fill
+            item += fill
 
             # Uma linha foi criada
             model_draw.append(item)
