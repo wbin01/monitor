@@ -8,7 +8,7 @@ import status
 # para emular números de estatísticas ou status, números que ficam com valor
 # alto e depois abaixam.
 #
-# status = A variável status irá representar a fonte do valor estatístico.
+# status_emulator = A variável status irá representar a fonte do valor estatístico.
 # small_monitor = A variável small_monitor será o primeiro monitor
 # big_monitor = A variável big_monitor será o segundo monitor
 #
@@ -19,18 +19,22 @@ import status
 #  O segundo monitor (big_monitor) é exibido linha por linha em um loop 'for'. Isso
 # dará a capacidadede de adicionar informações antes e depois de cada linha
 
-status = status.StatusEmulator(min_value=0, max_value=20)
+# Exemplo 1:
+status_emulator = status.StatusEmulator(min_value=0, max_value=10)
 small_monitor = monitor.Monitor(columns=50, lines=10)
+for loop in range(70):
+    os.system("clear")  # Limpar a tela do terminal para atualizar o loop
+    real_time_value = status_emulator.get_value()  # Recebe um valor de status em tempo real
+    print(small_monitor.get_as_color_str(real_time_value))
+    time.sleep(0.1)
+
+# Exemplo 2:
+status_emulator = status.StatusEmulator(min_value=0, max_value=20)
 big_monitor = monitor.Monitor(
     columns=50, lines=20, primary_color="red", secondary_color="red-dark", primary_character="+")
-
-while True:
-    os.system("clear")  # Limpar para atualizar a tela do terminal durante o loop
-    real_time_value = status.get_value()  # Recebe um valor de status em tempo real
-
-    print(
-        small_monitor.get_as_color_str(          # O valor é dividido por 2, pois
-            round(real_time_value / 2)) + '\n')  # este monitor tem metade da altura
+for loop in range(70):
+    os.system("clear")
+    real_time_value = status_emulator.get_value()
 
     big_monitor_as_list = big_monitor.get_as_color_list(real_time_value)
 
