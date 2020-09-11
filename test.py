@@ -8,9 +8,9 @@ import status
 # para emular números de estatísticas ou status, números que ficam com valor
 # alto e depois abaixam.
 #
-# status_emulator = A variável status irá representar a fonte do valor estatístico.
-# small_monitor = A variável small_monitor será o primeiro monitor
-# big_monitor = A variável big_monitor será o segundo monitor
+# status_emulator -> A variável 'status_emulator' irá representar a fonte do valor estatístico.
+# small_monitor -> A variável 'small_monitor' será o primeiro monitor
+# big_monitor -> A variável 'big_monitor' será o segundo monitor
 #
 #  *Lembrete: O valor da quantidade de linha corresponde ao valor máximo do status,
 # então um valor real de status deve ser dividido para quantidade de linhas do monitor
