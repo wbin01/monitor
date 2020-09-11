@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 class Monitor(object):
     """Monitor em tempo real. cria um gráfico com um valor"""
 
@@ -106,7 +107,7 @@ class Monitor(object):
         """
         # Criando uma lista de modelo
         #  * ** ***** ** *
-        # [101101111101101] 
+        # [101101111101101]
 
         # Cria um modelo com o histórico da lista
         model = self.history[id(self)]
@@ -147,17 +148,18 @@ class Monitor(object):
         #
         # [-----, ***--, **---, *****]  Modelo de string
         #
-        # [---*]                        Modelo para print()
-        # [---*]
-        # [-*-*]
-        # [-***]
-        # [-***]
-        #  0325
+        # [-      -      -      *    ]  Modelo para print()
+        # [-      -      -      *    ]
+        # [-      *      -      *    ]
+        # [-      *      *      *    ]
+        # [-      *      *      *    ]
 
         # Pega o caractere de cima de todos os itens, e cria uma lista
         # depois os próximos caracteres e faz outra lista ...
         model_print = list()
-        nc = self.lines - 1  # numero de linhas menos 1 pq abaixo a contagem é iniciada do zero e não do um
+
+        # numero de linhas menos 1, pq abaixo a contagem é iniciada do zero e não do um
+        nc = self.lines - 1
         for r in range(self.lines):  # Altura da coluna
             character = ""
             for i in model_draw:
@@ -182,10 +184,11 @@ class Monitor(object):
         model_print = list()
         for i in as_list:
             model_print.append(i.replace(
-                self.primary_character, self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
-                ).replace(
-                self.secondary_character, self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"]
-                )
+                self.primary_character,
+                self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
+            ).replace(
+                self.secondary_character,
+                self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"])
             )
 
         return model_print
@@ -229,9 +232,11 @@ class Monitor(object):
         """
         as_str = self.get_as_str(value)
         as_str = as_str.replace(
-            self.primary_character, self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
+            self.primary_character,
+            self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
         ).replace(
-            self.secondary_character, self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"]
+            self.secondary_character,
+            self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"]
         )
 
         return as_str
