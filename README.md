@@ -36,7 +36,8 @@ import monitor
 import status
 
 valor_do_bitcoin = status.StatusEmulator(min_value=0, max_value=20)
-monitor_do_bitcoin = monitor.Monitor(columns=50, lines=20, primary_color="red-dark", primary_character="'")
+monitor_do_bitcoin = monitor.Monitor(
+    columns=50, lines=20, primary_color="red-dark", primary_character="'")
 
 for loop in range(70):
     os.system("clear")
