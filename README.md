@@ -41,8 +41,8 @@ monitor_do_bitcoin = monitor.Monitor(
 
 for loop in range(70):
     os.system("clear")
-
     vertical_label_num = 100  # Números serão uma etiqueta na vertical antes do monitor
+    
     for line in monitor_do_bitcoin.get_as_color_list(valor_do_bitcoin.get_value()):
         print(("  " + str(vertical_label_num))[-3:] + " % |", line)
         vertical_label_num -= 5
