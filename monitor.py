@@ -4,7 +4,7 @@
 class Monitor(object):
     """Monitor em tempo real. cria um gráfico com um valor"""
 
-    history = dict()
+    __history = dict()
 
     def __init__(self,
                  value=5,
@@ -24,19 +24,15 @@ class Monitor(object):
         :type primary_color: str
         :type secondary_color: str
         """
-        # O modelo é uma lista com os valore do último gráfico que foi usado
-        # normalmente se inicia com None para que o primeiro modelo seja criado por
-        # essa classe. essa função retorna um modelo que pode ser repassado de volta em um loop
+        self.__value = value
+        self.__columns = columns
+        self.__lines = lines
+        self.__primary_character = primary_character
+        self.__secondary_character = secondary_character
+        self.__primary_color = primary_color
+        self.__secondary_color = secondary_color
 
-        self.value = value
-        self.columns = columns
-        self.lines = lines
-        self.primary_character = primary_character
-        self.secondary_character = secondary_character
-        self.primary_color = primary_color
-        self.secondary_color = secondary_color
-
-        self.colors = {
+        self.__colors = {
             "clean": "\033[0m",
 
             "red": "\033[0m\033[0;31m",
@@ -74,50 +70,34 @@ class Monitor(object):
             "white-dark": "\033[0m\033[2;37m",
             "white-background": "\033[0m\033[0;37;47m",
         }
-        self._set_history()
+        
+        # Se não houver histórico
+        if id(self) not in self.__history:
+            self.__history[id(self)] = [0 for i in range(self.__columns)]
 
-    def _get_history(self):
-        """
-        Retorna uma lista como modelo de histórico para o monitor
-        """
+    def get_as_list(self, value: int):
+        """Retorna uma lista com as linhas que desenham o monitor.
 
-        if id(self) not in self.history:
-            m = list()
-            for column in range(self.columns):
-                m.append(0)
-
-            history = m
-
-        else:
-            history = self.history[id(self)]
-
-        return history
-
-    def _set_history(self):
-        """Atualiza o histórico da instância"""
-        self.history[id(self)] = self._get_history()
-
-    def get_as_list(self, value):
-        """
-        Retorna uma lista com as linhas que desenham o monitor.
-        Cada linha é uma string com ae ser usada em um print dentro de um loop.
+        Cada item é uma string a ser usada em um print dentro de um loop.
         O objetivo deste monitor em lista, é a facilidade de adicionar informações
         antes e depois de cada linha exibida.
-        :type value: int
+
+        :param value: Inteiro
         """
+
         # Criando uma lista de modelo
         #  * ** ***** ** *
         # [101101111101101]
 
         # Cria um modelo com o histórico da lista
-        model = self.history[id(self)]
+        model = self.__history[id(self)]
 
-        # O ultimo item da lista sempre será atualizado.
+        # O primeiro e o ultimo item da lista sempre será atualizado.
         model.append(value)
-        # Devolve tamanho da lista
         del model[0]
 
-        self.history[id(self)] = model
+        # Atualiza histórico na classe, mantendo o valor a cada instancia
+        self.__history[id(self)] = model
 
         # Criar um modelo de string (desenho) com informação do modelo de valores inteiro
         # [0    , 3    , 2    , 5    ]
@@ -125,15 +105,16 @@ class Monitor(object):
         model_draw = list()
         for m in model:
             # quantidade de caracteres vai ser a quantidade do valor
-            item = self.primary_character * m
+            item = self.__primary_character * m
 
             # Preencher o resto da linha onde é o "vazio", com outro caractere
             fill = ""
+
             # as colunas são sempre uma escala de 10 %, i.e de 10 em 10
-            if m < self.lines:
+            if m < self.__lines:
                 # resto faltante
-                rest = self.lines - m
-                fill = self.secondary_character * rest
+                rest = self.__lines - m
+                fill = self.__secondary_character * rest
 
             # Preencher
             item += fill
@@ -159,8 +140,8 @@ class Monitor(object):
         model_print = list()
 
         # numero de linhas menos 1, pq abaixo a contagem é iniciada do zero e não do um
-        nc = self.lines - 1
-        for r in range(self.lines):  # Altura da coluna
+        nc = self.__lines - 1
+        for r in range(self.__lines):  # Altura da coluna
             character = ""
             for i in model_draw:
                 character = character + i[nc]
@@ -171,32 +152,33 @@ class Monitor(object):
         return model_print
 
     def get_as_color_list(self, value):
-        """
-        Mesmo que "get_as_list()", porem com cores.
+        """Mesmo que "get_as_list()", porém com cores.
 
         Note que os caracteres de informação de cores não são exibidas no console,
         por isso uma contagem de caracteres em uma string com cores,
         não equivale a quantidade de caracteres exibido no console.
 
-        :type value: int
+        :param value: Inteiro
         """
         as_list = self.get_as_list(value)
         model_print = list()
         for i in as_list:
             model_print.append(i.replace(
-                self.primary_character,
-                self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
+                self.__primary_character,
+                self.__colors[self.__primary_color] + self.__primary_character + self.__colors["clean"]
             ).replace(
-                self.secondary_character,
-                self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"])
+                self.__secondary_character,
+                self.__colors[self.__secondary_color] + self.__secondary_character + self.__colors["clean"])
             )
 
         return model_print
 
     def get_as_str(self, value):
-        """
+        """String do monitor com o valor passado
+
         Retorna uma string que desenha o monitor com o valor passado.
-        :type value: int
+
+        :param value: Inteiro
         """
         # [---*]
         # [---*]
@@ -221,8 +203,7 @@ class Monitor(object):
         return str_print
 
     def get_as_color_str(self, value):
-        """
-        Mesmo que "get_as_str()", porem com cores.
+        """Mesmo que "get_as_str()", porém com cores.
 
         Note que os caracteres de informação de cores não são exibidas no console,
         por isso uma contagem de caracteres em uma string com cores,
@@ -232,11 +213,42 @@ class Monitor(object):
         """
         as_str = self.get_as_str(value)
         as_str = as_str.replace(
-            self.primary_character,
-            self.colors[self.primary_color] + self.primary_character + self.colors["clean"]
+            self.__primary_character,
+            self.__colors[self.__primary_color] + self.__primary_character + self.__colors["clean"]
         ).replace(
-            self.secondary_character,
-            self.colors[self.secondary_color] + self.secondary_character + self.colors["clean"]
+            self.__secondary_character,
+            self.__colors[self.__secondary_color] + self.__secondary_character + self.__colors["clean"]
         )
 
         return as_str
+
+if __name__ == '__main__':
+    import time
+    import os
+
+    import monitor
+    import status
+    
+    valor_da_bolsa = status.StatusEmulator(min_value=0, max_value=10)
+    monitor_da_bolsa = monitor.Monitor(columns=50, lines=10)
+
+    for loop in range(70):
+        os.system("clear")
+        print(monitor_da_bolsa.get_as_color_str(valor_da_bolsa.get_value()))
+        time.sleep(0.1)
+
+    valor_do_bitcoin = status.StatusEmulator(min_value=0, max_value=20)
+    monitor_do_bitcoin = monitor.Monitor(columns=50, lines=20, primary_color="red-dark", primary_character="'")
+
+    for loop in range(70):
+        os.system("clear")
+
+        vertical_label_num = 100  # Números serão uma etiqueta na vertical antes do monitor
+        for line in monitor_do_bitcoin.get_as_color_list(valor_do_bitcoin.get_value()):
+            print(("  " + str(vertical_label_num))[-3:] + " % |", line)
+            vertical_label_num -= 5
+
+        print("        " + "-" * 50)  # Desenha as etiquetas da horizontal
+        print("       0    1    2    3    4    5    6    7    8    9    10")
+        time.sleep(0.1)
+
