@@ -1,8 +1,6 @@
 ## monitor
 
-Monitor em tempo real com forma de gráfico.
-
-Wilden Alisson Gomes https://github.com/w-a-gomes
+Monitor em tempo real em formato de gráfico.
 
 https://github.com/w-a-gomes/monitor
 
