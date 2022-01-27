@@ -21,7 +21,7 @@ fn simple_monitor() {
     let mut monit = monitor::Monitor::new(width, height, char_1, char_2, color_1, color_2);
 
     // A loop controls the monitor display time
-    for _ in 0..width {  // If 'sleep' below is 1 second, then using 60 here is 1 minute in loop
+    for _ in 0..60 {  // If 'sleep' below is 1 second, then using 60 here is 1 minute in loop
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char); // Clear terminal
 
         // Utility to emulate real-time value
@@ -31,31 +31,23 @@ fn simple_monitor() {
         for monitor_lines in monit.status(bitcoin_value.value()) {
             println!("{}", monitor_lines);
         }
-        sleep(Duration::from_millis(100)); // Slow down display
+        sleep(Duration::from_millis(100)); // Slow down display (1 second is 1000)
     }
 }
 
 fn detailed_monitor() {
-    // Settings
-    let width = 60;
-    let height = 15;
-    let char_1 = Some('+');             // Default is *
-    let char_2 = Some('-');             // Default is -
-    let color_1 = Some((47, 87, 124));  // Default is system/terminal color
-    let color_2 = Some((29, 79, 41));   // Default is system/terminal color
+    let mut monit = monitor::Monitor::new(  // Instance
+        60, 15, Some('+'), None, Some((47, 87, 124)), Some((29, 79, 41)));
 
-    // Instance
-    let mut monit = monitor::Monitor::new(width, height, char_1, char_2, color_1, color_2);
+    for _ in 0..60 {  // Display time
+        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);  // Clear terminal
 
-    // Show
-    for _ in 0..width {
-        print!("{esc}[2J{esc}[1;1H", esc = 27 as char); // Clear terminal
-        let mut bitcoin_value = monitor::ValueEmulator::new(0, height);
+        let mut bitcoin_value = monitor::ValueEmulator::new(0, 15);  // Real-time value
 
         for (n, m) in monit.status(bitcoin_value.value()).iter().enumerate() {
-            println!(" {} {}", m, n + 1);
+            println!(" {} {}", m, n + 1);  // Show row and right decoration
         }
-        println!("  {}", "----|".repeat((width/5) as usize));
+        println!("  {}", "----|".repeat(12 as usize));  // Bottom decoration
         sleep(Duration::from_millis(100));
     }
 }
