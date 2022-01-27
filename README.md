@@ -18,14 +18,14 @@ fn main() {
     let height = 15;
     let char_1 = Some('#');             // Default is *
     let char_2 = None;                  // Default is -
-    let color_1 = Some((68, 131, 73));  // Default is system/terminal color
-    let color_2 = Some((40, 50, 66));   // Default is system/terminal color
+    let color_1 = Some((68, 131, 73));  // Default is system/terminal color | RGB tuple
+    let color_2 = Some((40, 50, 66));   // Default is system/terminal color | (r, g, b)
 
     // Monitor instance
     let mut monit = monitor::Monitor::new(width, height, char_1, char_2, color_1, color_2);
 
     // A loop controls the monitor display time
-    for _ in 0..width {  // If 'sleep' below is 1 second, then using 60 here is 1 minute in loop
+    for _ in 0..60 {  // If 'sleep' below is 1 second, then using 60 here is 1 minute in loop
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char); // Clear terminal
 
         // Utility to emulate real-time value
