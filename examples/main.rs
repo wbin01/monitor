@@ -15,8 +15,8 @@ fn main() {
     // Monitor instance
     let mut monit = monitor::Monitor::new(width, height, char_1, char_2, color_1, color_2);
 
-    // Loop
-    for _ in 0..width {  // Time. If 'sleep' below is 1 second, then using 60 here is 1 minute in loop
+    // A loop controls the monitor display time
+    for _ in 0..width {  // If 'sleep' below is 1 second, then using 60 here is 1 minute in loop
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char); // Clear terminal
 
         // Utility to emulate real-time value
