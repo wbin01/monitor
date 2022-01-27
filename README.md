@@ -1,3 +1,12 @@
+## monitor
+
+Real-time monitor in graph format.
+
+https://github.com/w-a-gomes/monitor
+
+Exemplo 1:
+
+```rust
 use std::time::Duration;
 use std::thread::sleep;
 
@@ -29,3 +38,6 @@ fn main() {
         sleep(Duration::from_millis(500)); // Slow down display
     }
 }
+
+```
+![Image](data/screenshot_01.png "screenshot")
