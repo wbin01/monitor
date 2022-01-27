@@ -4,7 +4,7 @@ Real-time display in graphical format written in Rust.
 
 https://github.com/w-a-gomes/monitor
 
-Exemplo 1:
+Example:
 
 ```rust
 use std::time::Duration;
