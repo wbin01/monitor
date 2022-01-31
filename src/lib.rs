@@ -6,72 +6,76 @@ pub struct Monitor{
     max_value: i32,
     width: i32,
     height: i32,
-    primary_character: String,
-    secondary_character: String,
-    primary_rgb_color: String,
-    secondary_rgb_color: String,
+    primary_character: char,
+    new_primary_character: char,
+    primary_rgb_color: Option<(u8, u8, u8)>,
+    secondary_character: char,
+    new_secondary_character: char,
+    secondary_rgb_color: Option<(u8, u8, u8)>,
 }
 
 impl Monitor {
-    pub fn new(
-        width: i32,
-        height: i32,
-        primary_character: Option<char>,
-        secondary_character: Option<char>,
-        primary_rgb_color: Option<(u8, u8, u8)>,
-        secondary_rgb_color: Option<(u8, u8, u8)>,
-    ) -> Monitor {
+    pub fn new() -> Monitor {
         // History
         let mut history = Vec::new();
-        for _ in 0..width {
+        for _ in 0..60 {
             history.push(0);
-        }
-
-        // Max value
-        let max_value = height; 
-
-        // Primary character
-        let mut primary_char = String::new();
-        match primary_character {
-            Some(c) => primary_char.push(c),
-            None => primary_char.push('*'),
-        }
-
-        // Secondary character
-        let mut secondary_char = String::new();
-        match secondary_character {
-            Some(c) => secondary_char.push(c),
-            None => secondary_char.push('-'),
-        }
-        // print!("\x1B[0m"
-        // Primary RGB color
-        let mut primary_rgb = String::new();
-        match primary_rgb_color {
-            Some(c) => primary_rgb.push_str(format!("\x1b[38;2;{};{};{}m", c.0, c.1, c.2).as_str()),
-            None => primary_rgb.push_str("\x1B[0m"),
-        }
-
-        // Secondary RGB color
-        let mut secondary_rgb = String::new();
-        match secondary_rgb_color {
-            Some(c) => secondary_rgb.push_str(format!("\x1b[38;2;{};{};{}m", c.0, c.1, c.2).as_str()),
-            None => secondary_rgb.push_str("\x1B[0m"),
         }
 
         Monitor {
             history,
-            max_value,
-            width,
-            height,
-            primary_character: primary_char,
-            secondary_character: secondary_char,
-            primary_rgb_color: primary_rgb,
-            secondary_rgb_color: secondary_rgb,
-
+            max_value: 15,
+            width: 60,
+            height: 15,
+            primary_character: '#',
+            new_primary_character: '#',
+            primary_rgb_color: None,
+            secondary_character: '-',
+            new_secondary_character: '-',
+            secondary_rgb_color: None,
         }
     }
 
-    pub fn status(&mut self, mut value: i32) -> Vec<String> {
+    pub fn set_primary_character(
+            &mut self,
+            character: Option<char>,
+            rgb_color: Option<(u8, u8, u8)>,
+        ) {
+        if let Some(c) = character {
+            self.new_primary_character = c;
+        }
+        self.primary_rgb_color = rgb_color;
+    }
+
+    pub fn set_secondary_character(
+            &mut self,
+            character: Option<char>,
+            rgb_color: Option<(u8, u8, u8)>,
+        ) {
+        if let Some(c) = character { 
+            self.new_secondary_character = c;
+        }
+        self.secondary_rgb_color = rgb_color;
+    }
+
+    pub fn characters(&self) -> (char, char) {
+        (self.primary_character, self.secondary_character)
+    }
+
+    pub fn set_dimensions(&mut self, width: i32, height: i32) {
+        self.width = width;
+        self.height = height;
+        self.max_value = height;
+        for _ in 0..width {
+            self.history.push(0);
+        }
+    }
+
+    pub fn dimensions(&self) -> (i32, i32) {
+        (self.width, self.height)
+    }
+
+    pub fn build_chart(&mut self, mut value: i32) -> Vec<String> {
         // Update value for height%. Ex:
         // 1%(max(1000) / height(10)) = 100 | value((500) / 1%(100)) = 5 | 5 = 50%(height(10))
         value = value / (self.max_value / self.height);
@@ -99,13 +103,13 @@ impl Monitor {
 
             // Update with primary char: 3/5 = *** | 5/5 = *****
             if value > 0 {
-                for _ in 0..value {draw_value.push_str(&self.primary_character);}
+                for _ in 0..value {draw_value.push(self.primary_character);}
             }
 
             // Update with secondary char: 3/5 = ***-- | 0/5 = -----
             if value < self.height {
                 let plus = self.height - value;
-                for _ in 0..plus {draw_value.push_str(&self.secondary_character);}
+                for _ in 0..plus {draw_value.push(self.secondary_character);}
             }
 
             // Update draw model
@@ -132,18 +136,37 @@ impl Monitor {
             let mut new_line = String::new();
             
             for line_str in &draw_model {
+                // Primary color
+                let mut primary_color = String::new();
+                if let Some(color) = &self.primary_rgb_color {
+                    primary_color = format!(
+                        "\x1b[38;2;{};{};{}m", &color.0, &color.1, &color.2);
+                }
+
+                // Secondary color
+                let mut secondary_color = String::new();
+                if let Some(color) = &self.secondary_rgb_color {
+                    secondary_color = format!(
+                        "\x1b[38;2;{};{};{}m", &color.0, &color.1, &color.2);
+                }
+
+                // Character
                 let reverse_string: String = line_str.chars().rev().collect();
-                
-                let char_ = &reverse_string.as_str()[n as usize..(n as usize + 1)];
+                let txt = &reverse_string[n as usize..(n as usize + 1)];
                 let mut new_char = String::new();
 
-                if char_ == self.primary_character {
+                // Format
+                if txt == format!("{}", self.primary_character) {
                     new_char.push_str(
-                        format!("{}{}\x1B[0m", self.primary_rgb_color, char_).as_str());
+                        format!("{}{}\x1B[0m", primary_color, self.new_primary_character)
+                    .as_str());
                 } else {
                     new_char.push_str(
-                        format!("{}{}\x1B[0m", self.secondary_rgb_color, char_).as_str());
+                        format!("{}{}\x1B[0m", secondary_color, self.new_secondary_character)
+                    .as_str());
                 }
+
+                // Update
                 new_line.push_str(new_char.as_str());
             }
             list_model[n as usize].push_str(&new_line);
