@@ -20,7 +20,6 @@ fn main() {
     monit.set_primary_character(Some('-'), Some((222, 17, 64)));  // Default char is #
     monit.set_secondary_character(None, Some((64, 38, 80)));      // Default char is -
 
-    // A loop controls the monitor display time
     for _ in 0..60 {  // If 'sleep' below is 1 second, then using 60 here is 1 minute in loop
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char); // Clear terminal
 
