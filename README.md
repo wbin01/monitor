@@ -1,6 +1,6 @@
 ## monitor
 
-Real-time display in graphical format written in Rust.
+Real-time display in graphical format written in Rust
 
 https://github.com/w-a-gomes/monitor
 
