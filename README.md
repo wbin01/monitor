@@ -2,7 +2,7 @@
 
 Real-time display in graphical format written in Rust
 
-https://github.com/w-a-gomes/monitor
+https://github.com/ali55on/monitor
 
 Example:
 
